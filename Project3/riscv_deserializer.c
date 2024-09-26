@@ -7,7 +7,7 @@
  */
 
 int get_opcode(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 2) & 0x1F;
 }
 
 /*  Returns an integer representing the type of instruction  *
@@ -16,51 +16,79 @@ int get_opcode(int instruction) {
  *    2 - Math     (opcode == 0xC)                           *
  *    3 - Constant (opcode == 0xD)                           */
 int get_instruction_type(int instruction) {
-  return NOT_IMPLEMENTED;
+  int opcode = get_opcode(instruction);
+  switch(opcode){
+    case 0x0 :
+      return 0;
+    case 0x8 :
+      return 1;
+    case 0xC :
+      return 2;
+    case 0xD :
+      return 3;
+    default:
+      printf("[ERROR] Unknown opcode: 0x%x\n", opcode);
+      exit(-1);
+  }
+  
 }
 
 int get_width(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 12) & 0x7;
 }
 
 int get_destination(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 7) & 0x1F;
 }
 
 int get_load_address(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 15) & 0x1F;
 }
 
 int get_load_offset(int instruction) {
-  return NOT_IMPLEMENTED;
+  int imm = (instruction >> 20) & 0xFFF;  
+  if (imm & 0x800) {  
+    imm |= 0xFFFFF000;  
+  }
+  return imm;
 }
 
 int get_store_offset(int instruction) {
-  return NOT_IMPLEMENTED;
+  int imm4_0 = (instruction >> 7) & 0x1F;    
+  int imm11_5 = (instruction >> 25) & 0x7F;   
+  int imm = (imm11_5 << 5) | imm4_0;         
+  if (imm & 0x800) { 
+    imm |= 0xFFFFF000; 
+  }
+  return imm;
 }
 
 int get_store_source(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 20) & 0x1F;
 }
 
 int get_store_address(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 15) & 0x1F;
 }
 
 int get_math_function(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 12) & 0x7;
 }
 
 int get_math_operand_a(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 15) & 0x1F;
 }
 
 int get_math_operand_b(int instruction) {
-  return NOT_IMPLEMENTED;
+  return (instruction >> 20) & 0x1F;
 }
 
 int get_constant_value(int instruction) {
-  return NOT_IMPLEMENTED;
+  int imm = instruction >> 12;  
+  if (imm & 0x80000) {  
+    imm |= 0xFFF00000;  
+  }
+  return imm;
 }
 
 

@@ -9,19 +9,51 @@
  *  Stduent functions - Full in each so that they return the integer value of the requested instruction
  */
 int generate_load_instruction(int width, int destination, int address, int offset) {
-  return NOT_IMPLEMENTED;
+    int opcode = 0x0;
+    int instruction = (0x03 & 0xB)
+                    | (opcode & 0x1F) << 2
+                    | ((destination & 0x1F) << 7)
+                    | ((width & 0x7) << 12)
+                    | ((address & 0x1F) << 15)
+                    | ((offset & 0xFFF) << 20);
+    return instruction;
 }
 
+
+
 int generate_store_instruction(int width, int address, int source, int offset) {
-  return NOT_IMPLEMENTED;
+    int opcode = 0x8;
+    int imm4_0 = offset & 0x1F;
+    int imm11_5 = (offset >> 5) & 0x7F;
+    
+    int instruction = (0x03 & 0xB)
+                    | (opcode  & 0x1f) << 2
+                    | (imm4_0 << 7)
+                    | (width & 0x7) << 12
+                    | (address & 0x1F) << 15
+                    | (source & 0x1F) << 20
+                    | (imm11_5 & 0x7F) << 25;
+    return instruction;
 }
 
 int generate_math_instruction(int function, int a, int b, int destination) {
-  return NOT_IMPLEMENTED;
+  int opcode = 0xC;
+  int instruction = (0x03 & 0xB)
+                  | (opcode & 0x1F) << 2
+                  | (destination & 0x1F) << 7
+                  | (function & 0x7) << 12
+                  | (a & 0x1F) << 15
+                  | (b & 0x1F) << 20;
+  return instruction;
 }
 
 int generate_constant_instruction(int value, int destination) { 
-  return NOT_IMPLEMENTED;
+  int opcode = 0xD;
+  int instruction = (0x03 & 0xB)
+                  | (opcode & 0x1F) << 2
+                  | ((destination & 0x1F) << 7)
+                  | ((value & 0xFFFFF) << 12);
+  return instruction;
 }
 
 
